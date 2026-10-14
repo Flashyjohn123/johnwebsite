@@ -79,7 +79,7 @@ const QUESTIONS: QuestionnaireItem[] = [
 ];
 
 export function SkillsSection() {
-  const [openId, setOpenId] = useState<number | null>(1);
+  const [openId, setOpenId] = useState<number | null>(null);
 
   const toggleQuestion = (id: number) => {
     sounds.playClick();
