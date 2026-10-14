@@ -48,12 +48,15 @@ export function SongDial() {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // Smooth scroll mobile pill carousel to active track
+  // Smooth scroll mobile pill carousel to active track (container-only scroll, avoids shifting page/window)
   useEffect(() => {
     if (mobileCarouselRef.current) {
-      const pillEl = mobileCarouselRef.current.children[activeIndex] as HTMLElement | undefined;
+      const container = mobileCarouselRef.current;
+      const pillEl = container.children[activeIndex] as HTMLElement | undefined;
       if (pillEl) {
-        pillEl.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
+        const targetScrollLeft =
+          pillEl.offsetLeft - container.clientWidth / 2 + pillEl.clientWidth / 2;
+        container.scrollTo({ left: targetScrollLeft, behavior: "smooth" });
       }
     }
   }, [activeIndex]);
@@ -213,7 +216,7 @@ export function SongDial() {
   const strokeOffset = ringCircumference * (1 - progressRatio);
 
   return (
-    <section id="music" className="relative py-20 sm:py-32 px-4 sm:px-6 max-w-6xl mx-auto border-t border-zinc-900 flex flex-col items-center overflow-hidden">
+    <section id="music" className="relative py-20 sm:py-32 px-4 sm:px-6 w-full max-w-6xl mx-auto border-t border-zinc-900 flex flex-col items-center justify-center overflow-hidden">
       {/* Section Header */}
       <div className="w-full text-center mb-10 sm:mb-16">
         <h2 className="text-3xl sm:text-5xl font-bold tracking-tight text-zinc-100">
@@ -222,9 +225,9 @@ export function SongDial() {
       </div>
 
       {/* MOBILE EXPERIENCE (< 640px): Centerpiece Player Screen + Sleek Carousel */}
-      <div className="flex sm:hidden flex-col items-center justify-center w-full max-w-sm select-none">
+      <div className="flex sm:hidden flex-col items-center justify-center w-full max-w-sm mx-auto select-none">
         {/* Mobile Centerpiece Player */}
-        <div className="relative w-[280px] h-[280px] xs:w-[300px] xs:h-[300px] flex items-center justify-center">
+        <div className="relative w-[280px] h-[280px] mx-auto flex items-center justify-center shrink-0">
           {/* Circular Perimeter Progress Fill SVG */}
           <svg
             viewBox="0 0 100 100"
@@ -292,7 +295,7 @@ export function SongDial() {
           </svg>
 
           {/* Centered Digital Monitor Screen */}
-          <div className="relative z-20 w-[240px] h-[240px] xs:w-[255px] xs:h-[255px] rounded-full border border-zinc-800/90 bg-zinc-950 px-5 pt-6 pb-5 flex flex-col items-center justify-between text-center shadow-[0_0_50px_rgba(0,0,0,0.95)] overflow-hidden pointer-events-auto">
+          <div className="relative z-20 w-[240px] h-[240px] rounded-full border border-zinc-800/90 bg-zinc-950 p-5 flex flex-col items-center justify-between text-center shadow-[0_0_50px_rgba(0,0,0,0.95)] overflow-hidden pointer-events-auto">
             <div className="absolute inset-0 rounded-full bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.06)_0%,transparent_70%)] pointer-events-none" />
 
             <div className="relative z-10 w-full flex flex-col items-center justify-between h-full py-0.5">
@@ -308,7 +311,7 @@ export function SongDial() {
 
               {/* Center Block: Title + Animated Volume Bars + Lyrics */}
               <div className="my-auto px-1 flex flex-col items-center justify-center w-full max-w-[210px]">
-                <h3 className="text-lg xs:text-xl font-bold tracking-tight text-zinc-100 line-clamp-1 leading-tight">
+                <h3 className="text-lg font-bold tracking-tight text-zinc-100 line-clamp-1 leading-tight">
                   {currentTrack.title}
                 </h3>
 
@@ -369,7 +372,7 @@ export function SongDial() {
         </div>
 
         {/* Mobile Hardware Controls (Thumb Friendly min 44px targets) */}
-        <div className="mt-6 flex items-center gap-3">
+        <div className="mt-6 flex items-center justify-center gap-3 w-full mx-auto">
           <button
             onClick={handlePrev}
             className="w-12 h-12 rounded-full flex items-center justify-center text-zinc-300 hover:text-white bg-zinc-900/90 border border-zinc-800 transition-all cursor-pointer active:scale-95 shadow-md"
@@ -406,8 +409,8 @@ export function SongDial() {
         </div>
 
         {/* Mobile Horizontal Swipeable Track Carousel Selector */}
-        <div className="w-full mt-7 flex flex-col">
-          <div className="flex items-center justify-between text-[11px] font-mono text-zinc-400 mb-2.5 px-2">
+        <div className="w-full max-w-sm mx-auto mt-7 flex flex-col items-center">
+          <div className="w-full flex items-center justify-between text-[11px] font-mono text-zinc-400 mb-2.5 px-3">
             <span className="tracking-wider uppercase text-zinc-500 font-semibold">Track List</span>
             <span className="text-zinc-400">
               {(activeIndex + 1).toString().padStart(2, "0")} / {total.toString().padStart(2, "0")}
@@ -416,7 +419,7 @@ export function SongDial() {
 
           <div
             ref={mobileCarouselRef}
-            className="w-full overflow-x-auto no-scrollbar scroll-smooth flex gap-2 pb-2 pt-1 px-1 snap-x"
+            className="w-full max-w-full overflow-x-auto no-scrollbar scroll-smooth flex gap-2 pb-2 pt-1 px-3 snap-x"
           >
             {tracks.map((track, idx) => {
               const isActive = idx === activeIndex;
@@ -464,8 +467,8 @@ export function SongDial() {
       </div>
 
       {/* DESKTOP & TABLET EXPERIENCE (>= 640px): Standalone Centerpiece Rotary Jog Dial */}
-      <div className="hidden sm:flex relative flex-col items-center justify-center my-4 select-none">
-        <div className="relative w-[640px] h-[640px] md:w-[720px] md:h-[720px] lg:w-[800px] lg:h-[800px] flex items-center justify-center">
+      <div className="hidden sm:flex relative flex-col items-center justify-center my-4 select-none mx-auto w-full">
+        <div className="relative w-[640px] h-[640px] md:w-[720px] md:h-[720px] lg:w-[800px] lg:h-[800px] mx-auto flex items-center justify-center">
           {/* Circular Perimeter Progress Fill SVG */}
           <svg
             viewBox="0 0 100 100"
