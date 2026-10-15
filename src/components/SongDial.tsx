@@ -241,39 +241,18 @@ export function SongDial() {
             />
 
             {isPlayingSnippet && (
-              <>
-                {/* Clean, continuous natural neon arc with modern drop-shadow falloff */}
-                <circle
-                  cx="50"
-                  cy="50"
-                  r={ringRadius}
-                  fill="none"
-                  stroke={currentTrack.color || "#ffffff"}
-                  strokeWidth="2.8"
-                  strokeLinecap="round"
-                  strokeDasharray={ringCircumference}
-                  strokeDashoffset={strokeOffset}
-                  transform="rotate(-90 50 50)"
-                  style={{
-                    filter: `drop-shadow(0 0 4px ${currentTrack.color || "#ffffff"}) drop-shadow(0 0 12px ${currentTrack.color || "#ffffff"}80)`,
-                  }}
-                />
-
-                {/* Hot core filament for vibrant illumination */}
-                <circle
-                  cx="50"
-                  cy="50"
-                  r={ringRadius}
-                  fill="none"
-                  stroke="#ffffff"
-                  strokeWidth="1.2"
-                  strokeLinecap="round"
-                  strokeDasharray={ringCircumference}
-                  strokeDashoffset={strokeOffset}
-                  transform="rotate(-90 50 50)"
-                  opacity={0.9}
-                />
-              </>
+              <circle
+                cx="50"
+                cy="50"
+                r={ringRadius}
+                fill="none"
+                stroke={currentTrack.color || "#ffffff"}
+                strokeWidth="2.2"
+                strokeLinecap="round"
+                strokeDasharray={ringCircumference}
+                strokeDashoffset={strokeOffset}
+                transform="rotate(-90 50 50)"
+              />
             )}
           </svg>
 
@@ -468,39 +447,18 @@ export function SongDial() {
             />
 
             {isPlayingSnippet && (
-              <>
-                {/* Clean, continuous natural neon arc with modern drop-shadow falloff */}
-                <circle
-                  cx="50"
-                  cy="50"
-                  r={ringRadius}
-                  fill="none"
-                  stroke={currentTrack.color || "#ffffff"}
-                  strokeWidth="2.8"
-                  strokeLinecap="round"
-                  strokeDasharray={ringCircumference}
-                  strokeDashoffset={strokeOffset}
-                  transform="rotate(-90 50 50)"
-                  style={{
-                    filter: `drop-shadow(0 0 5px ${currentTrack.color || "#ffffff"}) drop-shadow(0 0 16px ${currentTrack.color || "#ffffff"}80)`,
-                  }}
-                />
-
-                {/* Hot core filament for vibrant illumination */}
-                <circle
-                  cx="50"
-                  cy="50"
-                  r={ringRadius}
-                  fill="none"
-                  stroke="#ffffff"
-                  strokeWidth="1.2"
-                  strokeLinecap="round"
-                  strokeDasharray={ringCircumference}
-                  strokeDashoffset={strokeOffset}
-                  transform="rotate(-90 50 50)"
-                  opacity={0.9}
-                />
-              </>
+              <circle
+                cx="50"
+                cy="50"
+                r={ringRadius}
+                fill="none"
+                stroke={currentTrack.color || "#ffffff"}
+                strokeWidth="2.2"
+                strokeLinecap="round"
+                strokeDasharray={ringCircumference}
+                strokeDashoffset={strokeOffset}
+                transform="rotate(-90 50 50)"
+              />
             )}
           </svg>
 
