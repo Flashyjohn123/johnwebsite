@@ -242,65 +242,36 @@ export function SongDial() {
 
             {isPlayingSnippet && (
               <>
-                <defs>
-                  {/* Multi-stage Gaussian Blur filter for ultra-smooth optical glow without pixel stepping */}
-                  <filter id="neon-glow-mobile" x="-50%" y="-50%" width="200%" height="200%">
-                    <feGaussianBlur in="SourceGraphic" stdDeviation="1.8" result="tightBlur" />
-                    <feGaussianBlur in="SourceGraphic" stdDeviation="4" result="midBlur" />
-                    <feGaussianBlur in="SourceGraphic" stdDeviation="8" result="wideBlur" />
-                    <feMerge>
-                      <feMergeNode in="wideBlur" />
-                      <feMergeNode in="midBlur" />
-                      <feMergeNode in="tightBlur" />
-                      <feMergeNode in="SourceGraphic" />
-                    </feMerge>
-                  </filter>
-                </defs>
-
-                {/* Layer 1: Ultra-diffuse ambient bloom */}
+                {/* Clean, continuous natural neon arc with modern drop-shadow falloff */}
                 <circle
                   cx="50"
                   cy="50"
                   r={ringRadius}
                   fill="none"
                   stroke={currentTrack.color || "#ffffff"}
-                  strokeWidth="8"
+                  strokeWidth="2.8"
                   strokeLinecap="round"
-                  strokeOpacity="0.25"
                   strokeDasharray={ringCircumference}
                   strokeDashoffset={strokeOffset}
                   transform="rotate(-90 50 50)"
-                  filter="url(#neon-glow-mobile)"
+                  style={{
+                    filter: `drop-shadow(0 0 4px ${currentTrack.color || "#ffffff"}) drop-shadow(0 0 12px ${currentTrack.color || "#ffffff"}80)`,
+                  }}
                 />
 
-                {/* Layer 2: Soft saturated mid-glow */}
-                <circle
-                  cx="50"
-                  cy="50"
-                  r={ringRadius}
-                  fill="none"
-                  stroke={currentTrack.color || "#ffffff"}
-                  strokeWidth="4"
-                  strokeLinecap="round"
-                  strokeOpacity="0.50"
-                  strokeDasharray={ringCircumference}
-                  strokeDashoffset={strokeOffset}
-                  transform="rotate(-90 50 50)"
-                />
-
-                {/* Layer 3: Core crisp neon arc */}
+                {/* Hot core filament for vibrant illumination */}
                 <circle
                   cx="50"
                   cy="50"
                   r={ringRadius}
                   fill="none"
                   stroke="#ffffff"
-                  strokeWidth="1.8"
+                  strokeWidth="1.2"
                   strokeLinecap="round"
-                  strokeOpacity="0.95"
                   strokeDasharray={ringCircumference}
                   strokeDashoffset={strokeOffset}
                   transform="rotate(-90 50 50)"
+                  opacity={0.9}
                 />
               </>
             )}
@@ -498,65 +469,36 @@ export function SongDial() {
 
             {isPlayingSnippet && (
               <>
-                {/* Defs with multi-tier Gaussian Blur filter for ultra-smooth optical bloom */}
-                <defs>
-                  <filter id="neon-glow" x="-50%" y="-50%" width="200%" height="200%">
-                    <feGaussianBlur in="SourceGraphic" stdDeviation="1.8" result="tightBlur" />
-                    <feGaussianBlur in="SourceGraphic" stdDeviation="4.5" result="midBlur" />
-                    <feGaussianBlur in="SourceGraphic" stdDeviation="9" result="wideBlur" />
-                    <feMerge>
-                      <feMergeNode in="wideBlur" />
-                      <feMergeNode in="midBlur" />
-                      <feMergeNode in="tightBlur" />
-                      <feMergeNode in="SourceGraphic" />
-                    </feMerge>
-                  </filter>
-                </defs>
-
-                {/* Layer 1: Ultra-diffuse ambient bloom */}
+                {/* Clean, continuous natural neon arc with modern drop-shadow falloff */}
                 <circle
                   cx="50"
                   cy="50"
                   r={ringRadius}
                   fill="none"
                   stroke={currentTrack.color || "#ffffff"}
-                  strokeWidth="8"
+                  strokeWidth="2.8"
                   strokeLinecap="round"
-                  strokeOpacity="0.25"
                   strokeDasharray={ringCircumference}
                   strokeDashoffset={strokeOffset}
                   transform="rotate(-90 50 50)"
-                  filter="url(#neon-glow)"
+                  style={{
+                    filter: `drop-shadow(0 0 5px ${currentTrack.color || "#ffffff"}) drop-shadow(0 0 16px ${currentTrack.color || "#ffffff"}80)`,
+                  }}
                 />
 
-                {/* Layer 2: Soft saturated mid-glow */}
-                <circle
-                  cx="50"
-                  cy="50"
-                  r={ringRadius}
-                  fill="none"
-                  stroke={currentTrack.color || "#ffffff"}
-                  strokeWidth="4"
-                  strokeLinecap="round"
-                  strokeOpacity="0.50"
-                  strokeDasharray={ringCircumference}
-                  strokeDashoffset={strokeOffset}
-                  transform="rotate(-90 50 50)"
-                />
-
-                {/* Layer 3: Core crisp neon arc */}
+                {/* Hot core filament for vibrant illumination */}
                 <circle
                   cx="50"
                   cy="50"
                   r={ringRadius}
                   fill="none"
                   stroke="#ffffff"
-                  strokeWidth="1.8"
+                  strokeWidth="1.2"
                   strokeLinecap="round"
-                  strokeOpacity="0.95"
                   strokeDasharray={ringCircumference}
                   strokeDashoffset={strokeOffset}
                   transform="rotate(-90 50 50)"
+                  opacity={0.9}
                 />
               </>
             )}
