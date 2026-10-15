@@ -27,7 +27,7 @@ export function SongDial() {
   const [snippetProgress, setSnippetProgress] = useState(0);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
-  const progressIntervalRef = useRef<NodeJS.Timeout | null>(null);
+  const animationFrameRef = useRef<number | null>(null);
 
   const [dialRadius, setDialRadius] = useState(260);
   const mobileCarouselRef = useRef<HTMLDivElement>(null);
@@ -78,7 +78,7 @@ export function SongDial() {
       audioRef.current.currentTime = 0;
     }
     if (timerRef.current) clearTimeout(timerRef.current);
-    if (progressIntervalRef.current) clearInterval(progressIntervalRef.current);
+    if (animationFrameRef.current) cancelAnimationFrame(animationFrameRef.current);
     setIsPlayingSnippet(false);
     setSnippetProgress(0);
   };
@@ -104,25 +104,22 @@ export function SongDial() {
             setIsPlayingSnippet(true);
             setSnippetProgress(0);
 
-            const startTime = Date.now();
-            progressIntervalRef.current = setInterval(() => {
-              const elapsed = (Date.now() - startTime) / 1000;
+            const startTime = performance.now();
+            const updateFrame = (now: number) => {
+              const elapsed = (now - startTime) / 1000;
               if (elapsed >= 30) {
                 setSnippetProgress(30);
-                if (progressIntervalRef.current) clearInterval(progressIntervalRef.current);
+                stopCurrentSnippet();
               } else {
                 setSnippetProgress(elapsed);
                 if (elapsed > 28 && audioRef.current) {
                   const fade = Math.max(0, (30 - elapsed) / 2);
                   audioRef.current.volume = 0.10 * fade;
                 }
+                animationFrameRef.current = requestAnimationFrame(updateFrame);
               }
-            }, 50);
-
-            // Stop at exactly 30 seconds
-            timerRef.current = setTimeout(() => {
-              stopCurrentSnippet();
-            }, 30000);
+            };
+            animationFrameRef.current = requestAnimationFrame(updateFrame);
           })
           .catch((err) => {
             console.log("Audio autoplay restricted by browser:", err);
@@ -246,49 +243,64 @@ export function SongDial() {
             {isPlayingSnippet && (
               <>
                 <defs>
-                  <filter id="neon-glow-mobile" x="-30%" y="-30%" width="160%" height="160%">
-                    <feGaussianBlur stdDeviation="1.5" result="coloredBlur" />
+                  {/* Multi-stage Gaussian Blur filter for ultra-smooth optical glow without pixel stepping */}
+                  <filter id="neon-glow-mobile" x="-50%" y="-50%" width="200%" height="200%">
+                    <feGaussianBlur in="SourceGraphic" stdDeviation="1.8" result="tightBlur" />
+                    <feGaussianBlur in="SourceGraphic" stdDeviation="4" result="midBlur" />
+                    <feGaussianBlur in="SourceGraphic" stdDeviation="8" result="wideBlur" />
                     <feMerge>
-                      <feMergeNode in="coloredBlur" />
+                      <feMergeNode in="wideBlur" />
+                      <feMergeNode in="midBlur" />
+                      <feMergeNode in="tightBlur" />
                       <feMergeNode in="SourceGraphic" />
                     </feMerge>
                   </filter>
                 </defs>
 
-                {/* Soft Ambient Halo Layer */}
+                {/* Layer 1: Ultra-diffuse ambient bloom */}
                 <circle
                   cx="50"
                   cy="50"
                   r={ringRadius}
                   fill="none"
                   stroke={currentTrack.color || "#ffffff"}
-                  strokeWidth="5"
+                  strokeWidth="8"
                   strokeLinecap="round"
-                  strokeOpacity="0.45"
+                  strokeOpacity="0.25"
                   strokeDasharray={ringCircumference}
                   strokeDashoffset={strokeOffset}
                   transform="rotate(-90 50 50)"
                   filter="url(#neon-glow-mobile)"
-                  style={{
-                    transition: "stroke-dashoffset 0.05s linear",
-                  }}
                 />
 
-                {/* Core Brilliant Neon Arc */}
+                {/* Layer 2: Soft saturated mid-glow */}
                 <circle
                   cx="50"
                   cy="50"
                   r={ringRadius}
                   fill="none"
                   stroke={currentTrack.color || "#ffffff"}
-                  strokeWidth="2.4"
+                  strokeWidth="4"
                   strokeLinecap="round"
+                  strokeOpacity="0.50"
                   strokeDasharray={ringCircumference}
                   strokeDashoffset={strokeOffset}
                   transform="rotate(-90 50 50)"
-                  style={{
-                    transition: "stroke-dashoffset 0.05s linear",
-                  }}
+                />
+
+                {/* Layer 3: Core crisp neon arc */}
+                <circle
+                  cx="50"
+                  cy="50"
+                  r={ringRadius}
+                  fill="none"
+                  stroke="#ffffff"
+                  strokeWidth="1.8"
+                  strokeLinecap="round"
+                  strokeOpacity="0.95"
+                  strokeDasharray={ringCircumference}
+                  strokeDashoffset={strokeOffset}
+                  transform="rotate(-90 50 50)"
                 />
               </>
             )}
@@ -486,51 +498,65 @@ export function SongDial() {
 
             {isPlayingSnippet && (
               <>
-                {/* Defs with dedicated radial-compatible Gaussian Blur Filter to avoid clipping bounds */}
+                {/* Defs with multi-tier Gaussian Blur filter for ultra-smooth optical bloom */}
                 <defs>
-                  <filter id="neon-glow" x="-30%" y="-30%" width="160%" height="160%">
-                    <feGaussianBlur stdDeviation="1.5" result="coloredBlur" />
+                  <filter id="neon-glow" x="-50%" y="-50%" width="200%" height="200%">
+                    <feGaussianBlur in="SourceGraphic" stdDeviation="1.8" result="tightBlur" />
+                    <feGaussianBlur in="SourceGraphic" stdDeviation="4.5" result="midBlur" />
+                    <feGaussianBlur in="SourceGraphic" stdDeviation="9" result="wideBlur" />
                     <feMerge>
-                      <feMergeNode in="coloredBlur" />
+                      <feMergeNode in="wideBlur" />
+                      <feMergeNode in="midBlur" />
+                      <feMergeNode in="tightBlur" />
                       <feMergeNode in="SourceGraphic" />
                     </feMerge>
                   </filter>
                 </defs>
 
-                {/* Soft Ambient Halo Layer */}
+                {/* Layer 1: Ultra-diffuse ambient bloom */}
                 <circle
                   cx="50"
                   cy="50"
                   r={ringRadius}
                   fill="none"
                   stroke={currentTrack.color || "#ffffff"}
-                  strokeWidth="5"
+                  strokeWidth="8"
                   strokeLinecap="round"
-                  strokeOpacity="0.45"
+                  strokeOpacity="0.25"
                   strokeDasharray={ringCircumference}
                   strokeDashoffset={strokeOffset}
                   transform="rotate(-90 50 50)"
                   filter="url(#neon-glow)"
-                  style={{
-                    transition: "stroke-dashoffset 0.05s linear",
-                  }}
                 />
 
-                {/* Core Brilliant Neon Arc */}
+                {/* Layer 2: Soft saturated mid-glow */}
                 <circle
                   cx="50"
                   cy="50"
                   r={ringRadius}
                   fill="none"
                   stroke={currentTrack.color || "#ffffff"}
-                  strokeWidth="2.4"
+                  strokeWidth="4"
                   strokeLinecap="round"
+                  strokeOpacity="0.50"
                   strokeDasharray={ringCircumference}
                   strokeDashoffset={strokeOffset}
                   transform="rotate(-90 50 50)"
-                  style={{
-                    transition: "stroke-dashoffset 0.05s linear",
-                  }}
+                />
+
+                {/* Layer 3: Core crisp neon arc */}
+                <circle
+                  cx="50"
+                  cy="50"
+                  r={ringRadius}
+                  fill="none"
+                  stroke="#ffffff"
+                  strokeWidth="1.8"
+                  strokeLinecap="round"
+                  strokeOpacity="0.95"
+                  strokeDasharray={ringCircumference}
+                  strokeDashoffset={strokeOffset}
+                  transform="rotate(-90 50 50)"
                 />
               </>
             )}
