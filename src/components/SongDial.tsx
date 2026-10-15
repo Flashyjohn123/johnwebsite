@@ -241,18 +241,44 @@ export function SongDial() {
             />
 
             {isPlayingSnippet && (
-              <circle
-                cx="50"
-                cy="50"
-                r={ringRadius}
-                fill="none"
-                stroke={currentTrack.color || "#ffffff"}
-                strokeWidth="2.2"
-                strokeLinecap="round"
-                strokeDasharray={ringCircumference}
-                strokeDashoffset={strokeOffset}
-                transform="rotate(-90 50 50)"
-              />
+              <>
+                <defs>
+                  {/* Oversized filter region so blur tapers naturally to 0 alpha without harsh bounding box edge */}
+                  <filter id="soft-glow-mobile" x="-150%" y="-150%" width="400%" height="400%">
+                    <feGaussianBlur in="SourceGraphic" stdDeviation="2.2" />
+                  </filter>
+                </defs>
+
+                {/* Diffuse soft aura with infinite natural falloff */}
+                <circle
+                  cx="50"
+                  cy="50"
+                  r={ringRadius}
+                  fill="none"
+                  stroke={currentTrack.color || "#ffffff"}
+                  strokeWidth="3.4"
+                  strokeLinecap="round"
+                  strokeOpacity="0.38"
+                  strokeDasharray={ringCircumference}
+                  strokeDashoffset={strokeOffset}
+                  transform="rotate(-90 50 50)"
+                  filter="url(#soft-glow-mobile)"
+                />
+
+                {/* Sharp core neon beam */}
+                <circle
+                  cx="50"
+                  cy="50"
+                  r={ringRadius}
+                  fill="none"
+                  stroke={currentTrack.color || "#ffffff"}
+                  strokeWidth="1.8"
+                  strokeLinecap="round"
+                  strokeDasharray={ringCircumference}
+                  strokeDashoffset={strokeOffset}
+                  transform="rotate(-90 50 50)"
+                />
+              </>
             )}
           </svg>
 
@@ -447,18 +473,44 @@ export function SongDial() {
             />
 
             {isPlayingSnippet && (
-              <circle
-                cx="50"
-                cy="50"
-                r={ringRadius}
-                fill="none"
-                stroke={currentTrack.color || "#ffffff"}
-                strokeWidth="2.2"
-                strokeLinecap="round"
-                strokeDasharray={ringCircumference}
-                strokeDashoffset={strokeOffset}
-                transform="rotate(-90 50 50)"
-              />
+              <>
+                <defs>
+                  {/* Oversized filter region so blur tapers naturally to 0 alpha without harsh bounding box edge */}
+                  <filter id="soft-glow-desktop" x="-150%" y="-150%" width="400%" height="400%">
+                    <feGaussianBlur in="SourceGraphic" stdDeviation="2.2" />
+                  </filter>
+                </defs>
+
+                {/* Diffuse soft aura with infinite natural falloff */}
+                <circle
+                  cx="50"
+                  cy="50"
+                  r={ringRadius}
+                  fill="none"
+                  stroke={currentTrack.color || "#ffffff"}
+                  strokeWidth="3.4"
+                  strokeLinecap="round"
+                  strokeOpacity="0.38"
+                  strokeDasharray={ringCircumference}
+                  strokeDashoffset={strokeOffset}
+                  transform="rotate(-90 50 50)"
+                  filter="url(#soft-glow-desktop)"
+                />
+
+                {/* Sharp core neon beam */}
+                <circle
+                  cx="50"
+                  cy="50"
+                  r={ringRadius}
+                  fill="none"
+                  stroke={currentTrack.color || "#ffffff"}
+                  strokeWidth="1.8"
+                  strokeLinecap="round"
+                  strokeDasharray={ringCircumference}
+                  strokeDashoffset={strokeOffset}
+                  transform="rotate(-90 50 50)"
+                />
+              </>
             )}
           </svg>
 
