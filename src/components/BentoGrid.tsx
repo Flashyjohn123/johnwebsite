@@ -283,21 +283,22 @@ export function BentoGrid() {
     const isTablet = screenMode === "tablet";
 
     // Step X and rotation to display cards spread out in a wide, sweeping fan
-    // Desktop: spread cards wider apart so wings fan clearly out to the sides
-    // Tablet & Mobile: proportionally scaled so neighboring cards are prominently visible
-    const stepX = isMobile ? 85 : isTablet ? 170 : 235;
-    const stepRotate = isMobile ? 6.5 : isTablet ? 9.5 : 12;
+    // On mobile screens, cards spread out wide with lower scale and gentle rotation so left & right cards remain clearly visible
+    const stepX = isMobile ? 130 : isTablet ? 190 : 255;
+    const stepRotate = isMobile ? 7.5 : isTablet ? 10 : 13;
 
     const x = diff * stepX;
     // Elegant arch: center card is elevated, wings fan downward along a curved tabletop arc
-    const archY = Math.pow(diff, 2) * (isMobile ? 8 : 18);
-    const liftY = isCenter ? (isMobile ? -16 : -28) : 0;
+    const archY = Math.pow(diff, 2) * (isMobile ? 12 : 20);
+    const liftY = isCenter ? (isMobile ? -18 : -30) : 0;
     const y = archY + liftY;
 
     const rotate = diff * stepRotate;
     const scale = isCenter
-      ? (isMobile ? 1.02 : 1.04)
-      : Math.max(0.82, 1 - absDiff * 0.06);
+      ? 1
+      : isMobile
+      ? Math.max(0.80, 1 - absDiff * 0.10)
+      : Math.max(0.84, 1 - absDiff * 0.07);
 
     // 5-card fan: cards within diff <= 2 are visible in the fanned hand
     const isVisible = absDiff <= 2;
@@ -307,8 +308,8 @@ export function BentoGrid() {
       : isCenter
       ? 1
       : isMobile
-      ? Math.max(0.70, 1 - absDiff * 0.15)
-      : Math.max(0.75, 1 - absDiff * 0.12);
+      ? Math.max(0.80, 1 - absDiff * 0.12)
+      : Math.max(0.85, 1 - absDiff * 0.08);
 
     return { x, y, rotate, scale, zIndex, opacity, diff, isCenter, isVisible };
   };
@@ -396,7 +397,7 @@ export function BentoGrid() {
             >
               {/* Outer Card Frame */}
               <div
-                className={`relative w-[82vw] max-w-[285px] sm:w-[290px] md:w-[310px] lg:w-[325px] h-[395px] sm:h-[435px] md:h-[455px] rounded-[1.75rem] p-1 select-none transition-shadow duration-300 ${
+                className={`relative w-[72vw] max-w-[260px] sm:w-[290px] md:w-[310px] lg:w-[325px] h-[395px] sm:h-[435px] md:h-[455px] rounded-[1.75rem] p-1 select-none transition-shadow duration-300 ${
                   transform.isCenter
                     ? "bg-gradient-to-b from-zinc-500/90 via-zinc-800/80 to-zinc-900 shadow-[0_0_45px_rgba(255,255,255,0.09),0_20px_50px_rgba(0,0,0,0.9)] ring-1 ring-white/10"
                     : "bg-gradient-to-b from-zinc-800/80 via-zinc-900/60 to-zinc-950 shadow-xl"
