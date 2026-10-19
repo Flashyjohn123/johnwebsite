@@ -76,21 +76,28 @@ export function BackgroundParticles() {
       };
     });
 
-    // Occasional subtle shooting star
+    // Shooting stars / comets
     const shootingStars: ShootingStar[] = [];
     let lastShootingStarTime = Date.now();
 
     const spawnShootingStar = () => {
       shootingStars.push({
-        x: Math.random() * (width * 0.8),
-        y: Math.random() * (height * 0.4),
-        length: Math.random() * 60 + 50,
-        speed: Math.random() * 8 + 10,
-        angle: (Math.PI / 4) + (Math.random() - 0.5) * 0.2, // ~45 deg downward trajectory
-        alpha: 0.65,
+        x: Math.random() * (width * 0.85),
+        y: Math.random() * (height * 0.5),
+        length: Math.random() * 80 + 70,
+        speed: Math.random() * 8 + 11,
+        angle: (Math.PI / 4) + (Math.random() - 0.5) * 0.25, // ~45 deg downward trajectory
+        alpha: 0.75,
         active: true,
       });
     };
+
+    // Pre-seed comets so they are actively visible on load
+    if (!prefersReducedMotion) {
+      spawnShootingStar();
+      setTimeout(() => spawnShootingStar(), 1200);
+      setTimeout(() => spawnShootingStar(), 2800);
+    }
 
     let tick = 0;
 
@@ -125,10 +132,14 @@ export function BackgroundParticles() {
         }
       }
 
-      // Spawn Shooting Stars intermittently (~every 6-12 seconds)
+      // Spawn Shooting Stars / Comets periodically (~every 3-5 seconds, with chance of paired comets)
       const now = Date.now();
-      if (!prefersReducedMotion && now - lastShootingStarTime > 8000 && Math.random() < 0.02) {
+      if (!prefersReducedMotion && now - lastShootingStarTime > 3200 && Math.random() < 0.05) {
         spawnShootingStar();
+        // Occasional double comet stream
+        if (Math.random() < 0.4) {
+          setTimeout(() => spawnShootingStar(), 350 + Math.random() * 400);
+        }
         lastShootingStarTime = now;
       }
 
