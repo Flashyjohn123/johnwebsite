@@ -700,8 +700,8 @@ export function SongDial() {
               >
                 <div className="relative w-full h-full rounded-[calc(1.75rem-4px)] overflow-hidden bg-black border border-zinc-900/90 hover:border-zinc-700/80 transition-colors duration-200">
                   {/* The Live Spotify Playlist Player */}
-                  {isRevealed && (
-                    <div className="w-full h-full relative">
+                  <div className="w-full h-full relative">
+                    {isRevealed && (
                       <iframe
                         src={playlist.embedUrl}
                         width="100%"
@@ -711,18 +711,22 @@ export function SongDial() {
                         loading="lazy"
                         className="w-full h-full block rounded-[calc(1.75rem-4px)]"
                       />
-                    </div>
-                  )}
+                    )}
+                  </div>
 
                   {/* Card Picture directly covering the playlist */}
                   <AnimatePresence>
                     {!isRevealed && (
                       <motion.div
                         key="card-cover"
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        transition={{ duration: 0.15 }}
+                        initial={{ opacity: 1, scale: 1 }}
+                        exit={{
+                          opacity: 0,
+                          scale: 0.96,
+                          filter: "blur(4px)",
+                          transition: { duration: 0.45, ease: [0.22, 1, 0.36, 1] },
+                        }}
+                        transition={{ duration: 0.35, ease: "easeOut" }}
                         onClick={() => {
                           sounds.playClick();
                           togglePlaylistReveal(idx);

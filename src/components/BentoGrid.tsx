@@ -282,23 +282,23 @@ export function BentoGrid() {
     const isMobile = screenMode === "mobile";
     const isTablet = screenMode === "tablet";
 
-    // Step X and rotation to display cards spread out in a wide, sweeping fan
-    // On mobile screens, cards spread out wide with lower scale and gentle rotation so left & right cards remain clearly visible
-    const stepX = isMobile ? 130 : isTablet ? 190 : 255;
-    const stepRotate = isMobile ? 7.5 : isTablet ? 10 : 13;
+    // Step X and rotation to display cards spread closer together like a natural playing card hand
+    // Tightened spacing so adjacent cards flank neatly into a cohesive card spread without cutting off the viewport sides
+    const stepX = isMobile ? 80 : isTablet ? 120 : 160;
+    const stepRotate = isMobile ? 6 : isTablet ? 8.5 : 11;
 
     const x = diff * stepX;
     // Elegant arch: center card is elevated, wings fan downward along a curved tabletop arc
-    const archY = Math.pow(diff, 2) * (isMobile ? 12 : 20);
-    const liftY = isCenter ? (isMobile ? -18 : -30) : 0;
+    const archY = Math.pow(diff, 2) * (isMobile ? 14 : 22);
+    const liftY = isCenter ? (isMobile ? -16 : -26) : 0;
     const y = archY + liftY;
 
     const rotate = diff * stepRotate;
     const scale = isCenter
       ? 1
       : isMobile
-      ? Math.max(0.80, 1 - absDiff * 0.10)
-      : Math.max(0.84, 1 - absDiff * 0.07);
+      ? Math.max(0.85, 1 - absDiff * 0.08)
+      : Math.max(0.88, 1 - absDiff * 0.06);
 
     // 5-card fan: cards within diff <= 2 are visible in the fanned hand
     const isVisible = absDiff <= 2;
@@ -308,8 +308,8 @@ export function BentoGrid() {
       : isCenter
       ? 1
       : isMobile
-      ? Math.max(0.80, 1 - absDiff * 0.12)
-      : Math.max(0.85, 1 - absDiff * 0.08);
+      ? Math.max(0.85, 1 - absDiff * 0.08)
+      : Math.max(0.90, 1 - absDiff * 0.05);
 
     return { x, y, rotate, scale, zIndex, opacity, diff, isCenter, isVisible };
   };
@@ -319,7 +319,7 @@ export function BentoGrid() {
   return (
     <section
       id="about"
-      className="relative py-24 sm:py-28 px-4 sm:px-6 max-w-6xl mx-auto border-t border-zinc-900 overflow-x-clip"
+      className="relative py-24 sm:py-28 px-4 sm:px-6 max-w-6xl mx-auto border-t border-zinc-900 overflow-visible"
     >
       {/* Section Header */}
       <div className="mb-10 sm:mb-14">
