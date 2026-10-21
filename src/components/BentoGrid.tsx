@@ -282,31 +282,44 @@ export function BentoGrid() {
     const isMobile = screenMode === "mobile";
     const isTablet = screenMode === "tablet";
 
-    // True playing-card fanned hand geometry (like holding cards between fingers)
-    // The rotation pivot is placed at the bottom-center pinch point (thumb/finger grip).
-    // Cards fan out with a consistent angular spread (e.g., -14°, -7°, 0°, +7°, +14°)
-    // and overlapping horizontal step so each card reveals its left index/pip edge.
-    const stepX = isMobile ? 48 : isTablet ? 65 : 85;
-    const stepRotate = isMobile ? 6 : isTablet ? 7.5 : 9;
+    // Symmetrical 3D fan spread:
+    // Center card stands upright and elevated as the hero card.
+    // Flanking cards step outwards with comfortable breathing room so their headers, badges, and titles are clearly legible without messy cramming.
+    const stepX = isMobile ? 140 : isTablet ? 195 : 240;
+    const stepRotate = isMobile ? 5.5 : isTablet ? 7.5 : 9.5;
 
     const x = diff * stepX;
     
-    // Natural fanned hand arc: cards fan upward towards the right or dip gently along the bottom pivot
-    // The active card is pulled slightly forward/upward, while others rest in hand.
-    const arcY = Math.abs(diff) * (isMobile ? 8 : 12);
-    const liftY = isCenter ? (isMobile ? -24 : -32) : 0;
-    const y = arcY + liftY;
+    // Balanced downward fan arc for side wings:
+    // Flanking cards drop smoothly with quadratic curve, giving that premium Apple-style/game-hand card presentation.
+    const archY = Math.pow(absDiff, 1.8) * (isMobile ? 18 : 28);
+    const liftY = isCenter ? (isMobile ? -20 : -32) : 0;
+    const y = archY + liftY;
 
     const rotate = diff * stepRotate;
-    const scale = isCenter ? 1.02 : 0.96;
+    
+    // Scale and visual hierarchy:
+    // Center card is 100% full scale with high contrast; side cards step down slightly in scale (0.92, 0.84) and soften opacity/brightness
+    const scale = isCenter
+      ? 1
+      : isMobile
+      ? Math.max(0.82, 1 - absDiff * 0.09)
+      : Math.max(0.86, 1 - absDiff * 0.07);
 
-    // 5-card hand: visible cards within diff <= 2
+    // 5-card fan: cards within diff <= 2
     const isVisible = absDiff <= 2;
-    // In a hand of cards held like the photo, the right cards overlap the left cards (increasing zIndex from left to right),
-    // but the currently active/selected card should always sit on top when inspected.
-    // If not center, zIndex follows card hand order: left-to-right stacking (30 + diff * 2)
-    const zIndex = isCenter ? 50 : 30 + diff * 3;
-    const opacity = !isVisible ? 0 : 1;
+    
+    // Clean symmetrical z-index: Center card on top (40), immediate neighbors behind (30), outer wings behind those (20)
+    const zIndex = isCenter ? 40 : 30 - absDiff * 5;
+    
+    // Fade distant cards smoothly so they don't visually clutter the focus card
+    const opacity = !isVisible
+      ? 0
+      : isCenter
+      ? 1
+      : isMobile
+      ? Math.max(0.65, 1 - absDiff * 0.18)
+      : Math.max(0.75, 1 - absDiff * 0.14);
 
     return { x, y, rotate, scale, zIndex, opacity, diff, isCenter, isVisible };
   };
@@ -340,7 +353,7 @@ export function BentoGrid() {
               key={card.id}
               onClick={() => goToCard(idx)}
               style={{
-                transformOrigin: "40% 140%",
+                transformOrigin: "50% 120%",
                 zIndex: transform.zIndex,
                 pointerEvents: transform.isVisible ? "auto" : "none",
               }}
