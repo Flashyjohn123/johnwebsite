@@ -27,7 +27,7 @@ export function ContactSection() {
   };
 
   return (
-    <section id="contact" className="relative py-20 sm:py-28 px-4 sm:px-6 max-w-6xl mx-auto border-t border-zinc-900 overflow-hidden">
+    <section id="contact" className="relative py-8 sm:py-16 px-4 sm:px-6 w-full max-w-6xl mx-auto overflow-hidden">
       {/* Section Header */}
       <div className="mb-10 sm:mb-14">
         <h2 className="text-3xl sm:text-5xl font-bold tracking-tight text-zinc-100">

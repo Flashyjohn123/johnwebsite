@@ -213,7 +213,7 @@ export function SongDial() {
   const strokeOffset = ringCircumference * (1 - progressRatio);
 
   return (
-    <section id="music" className="relative py-20 sm:py-32 px-4 sm:px-6 w-full max-w-6xl mx-auto border-t border-zinc-900 flex flex-col items-center justify-center overflow-hidden">
+    <section id="music" className="relative py-8 sm:py-16 px-4 sm:px-6 w-full max-w-6xl mx-auto flex flex-col items-center justify-center overflow-hidden">
       {/* Section Header */}
       <div className="w-full text-center mb-10 sm:mb-16">
         <h2 className="text-3xl sm:text-5xl font-bold tracking-tight text-zinc-100">

@@ -329,7 +329,7 @@ export function BentoGrid() {
   return (
     <section
       id="about"
-      className="relative py-24 sm:py-28 px-4 sm:px-6 max-w-6xl mx-auto border-t border-zinc-900 overflow-visible"
+      className="relative py-8 sm:py-16 px-4 sm:px-6 w-full max-w-6xl mx-auto overflow-visible"
     >
       {/* Section Header */}
       <div className="mb-10 sm:mb-14">

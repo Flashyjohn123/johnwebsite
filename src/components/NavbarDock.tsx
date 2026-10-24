@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { motion } from "motion/react";
 import { sounds } from "../utils/audio";
 import { ConnectModal } from "./ConnectModal";
 import {
@@ -13,83 +12,68 @@ import {
   ChatDots,
 } from "@phosphor-icons/react";
 
-export function NavbarDock() {
+export type TabId = "home" | "vibes" | "about" | "skills" | "projects" | "contact";
+
+interface NavbarDockProps {
+  activeTab?: TabId;
+  onSelectTab?: (tab: TabId) => void;
+}
+
+export function NavbarDock({ activeTab = "home", onSelectTab }: NavbarDockProps) {
   const [isConnectOpen, setIsConnectOpen] = useState(false);
 
-  const handleNavClick = () => {
+  const handleTabClick = (tab: TabId) => {
     sounds.playClick();
+    if (onSelectTab) {
+      onSelectTab(tab);
+    }
   };
+
+  const navItems: { id: TabId; label: string; icon: typeof House }[] = [
+    { id: "home", label: "Home", icon: House },
+    { id: "vibes", label: "Vibes", icon: Disc },
+    { id: "about", label: "About", icon: SquaresFour },
+    { id: "skills", label: "Skills", icon: GraduationCap },
+    { id: "projects", label: "Projects", icon: FolderSimple },
+  ];
 
   return (
     <>
       <header className="absolute top-4 sm:top-6 inset-x-0 z-40 w-full px-3 flex justify-center pointer-events-none">
         <div className="flex justify-center w-full">
           {/* Centered Labeled Nav Bar with Backdrop Blur */}
-          <nav className="pointer-events-auto flex items-center gap-1 sm:gap-2 p-1.5 sm:p-2 rounded-full bg-zinc-950/80 backdrop-blur-xl border border-zinc-800/80 shadow-[0_8px_32px_rgba(0,0,0,0.6)]">
-            {/* Home */}
-            <a
-              href="#"
-              onClick={handleNavClick}
-              className="flex items-center justify-center gap-1.5 p-2.5 sm:px-3 sm:py-1.5 rounded-full text-xs font-medium text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800/70 transition-all active:scale-95 min-w-[40px] min-h-[40px] sm:min-w-0 sm:min-h-0"
-              aria-label="Home"
-            >
-              <House size={16} />
-              <span className="hidden sm:inline">Home</span>
-            </a>
-
-            {/* Vibes */}
-            <a
-              href="#music"
-              onClick={handleNavClick}
-              className="flex items-center justify-center gap-1.5 p-2.5 sm:px-3 sm:py-1.5 rounded-full text-xs font-medium text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800/70 transition-all active:scale-95 min-w-[40px] min-h-[40px] sm:min-w-0 sm:min-h-0"
-              aria-label="Vibes"
-            >
-              <Disc size={16} />
-              <span className="hidden sm:inline">Vibes</span>
-            </a>
-
-            {/* About */}
-            <a
-              href="#about"
-              onClick={handleNavClick}
-              className="flex items-center justify-center gap-1.5 p-2.5 sm:px-3 sm:py-1.5 rounded-full text-xs font-medium text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800/70 transition-all active:scale-95 min-w-[40px] min-h-[40px] sm:min-w-0 sm:min-h-0"
-              aria-label="About"
-            >
-              <SquaresFour size={16} />
-              <span className="hidden sm:inline">About</span>
-            </a>
-
-            {/* Skills */}
-            <a
-              href="#skills"
-              onClick={handleNavClick}
-              className="flex items-center justify-center gap-1.5 p-2.5 sm:px-3 sm:py-1.5 rounded-full text-xs font-medium text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800/70 transition-all active:scale-95 min-w-[40px] min-h-[40px] sm:min-w-0 sm:min-h-0"
-              aria-label="Skills"
-            >
-              <GraduationCap size={16} />
-              <span className="hidden sm:inline">Skills</span>
-            </a>
-
-            {/* Projects */}
-            <a
-              href="#projects"
-              onClick={handleNavClick}
-              className="flex items-center justify-center gap-1.5 p-2.5 sm:px-3 sm:py-1.5 rounded-full text-xs font-medium text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800/70 transition-all active:scale-95 min-w-[40px] min-h-[40px] sm:min-w-0 sm:min-h-0"
-              aria-label="Projects"
-            >
-              <FolderSimple size={16} />
-              <span className="hidden sm:inline">Projects</span>
-            </a>
+          <nav className="pointer-events-auto flex items-center gap-1 sm:gap-1.5 p-1.5 sm:p-2 rounded-full bg-zinc-950/85 backdrop-blur-xl border border-zinc-800/80 shadow-[0_8px_32px_rgba(0,0,0,0.6)]">
+            {navItems.map((item) => {
+              const Icon = item.icon;
+              const isActive = activeTab === item.id;
+              return (
+                <button
+                  key={item.id}
+                  type="button"
+                  onClick={() => handleTabClick(item.id)}
+                  className={`flex items-center justify-center gap-1.5 p-2 sm:px-3.5 sm:py-1.5 rounded-full text-xs font-medium transition-all active:scale-95 cursor-pointer min-w-[38px] min-h-[38px] sm:min-w-0 sm:min-h-0 ${
+                    isActive
+                      ? "bg-zinc-800 text-zinc-100 shadow-sm border border-zinc-700/60"
+                      : "text-zinc-400 hover:text-zinc-100 hover:bg-zinc-850/70 border border-transparent"
+                  }`}
+                  aria-label={item.label}
+                >
+                  <Icon size={16} weight={isActive ? "fill" : "regular"} />
+                  <span className="hidden sm:inline">{item.label}</span>
+                </button>
+              );
+            })}
 
             <div className="h-4 w-px bg-zinc-800 mx-0.5 sm:mx-1" />
 
             {/* Connect */}
             <button
+              type="button"
               onClick={() => {
                 sounds.playClick();
                 setIsConnectOpen(true);
               }}
-              className="flex items-center gap-1.5 px-3.5 py-2 sm:py-1.5 rounded-full bg-zinc-100 text-zinc-950 text-xs font-semibold hover:bg-white transition-all cursor-pointer shadow-sm active:scale-95 min-h-[40px] sm:min-h-0"
+              className="flex items-center gap-1.5 px-3.5 py-2 sm:py-1.5 rounded-full bg-zinc-100 text-zinc-950 text-xs font-semibold hover:bg-white transition-all cursor-pointer shadow-sm active:scale-95 min-h-[38px] sm:min-h-0"
             >
               <ChatDots size={15} weight="bold" />
               <span>Connect</span>
@@ -98,7 +82,11 @@ export function NavbarDock() {
         </div>
       </header>
 
-      <ConnectModal isOpen={isConnectOpen} onClose={() => setIsConnectOpen(false)} />
+      {/* Connect Modal Overlay */}
+      <ConnectModal
+        isOpen={isConnectOpen}
+        onClose={() => setIsConnectOpen(false)}
+      />
     </>
   );
 }
